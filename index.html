@@ -4,73 +4,146 @@
 <meta charset="UTF-8">
 <title>Us</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Georgia, serif;
+}
+
+body{
+  min-height:100vh;
+  background: radial-gradient(circle at center, #1a2740, #05070d);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+}
+
+/* START SCREEN */
+#start{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: radial-gradient(circle at center, #1a2740, #05070d);
+  z-index:10;
+}
+
+#start p{
+  font-size:18px;
+  opacity:0.8;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:0.5}
+  50%{opacity:1}
+}
+
+/* ALBUM */
+#album{
+  display:none;
+  width:100%;
+  max-width:360px;
+  padding:16px;
+  text-align:center;
+}
+
+.polaroid{
+  background:#fff;
+  padding:14px 14px 42px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.6);
+}
+
+.polaroid img{
+  width:100%;
+  display:block;
+}
+
+.polaroid p{
+  margin-top:16px;
+  color:#444;
+  font-size:14px;
+  font-style:italic;
+}
+
+.controls{
+  margin-top:20px;
+  display:flex;
+  justify-content:center;
+  gap:30px;
+}
+
+.controls button{
+  background:none;
+  border:1px solid rgba(255,255,255,0.6);
+  color:white;
+  padding:6px 14px;
+  font-size:18px;
+  border-radius:20px;
+}
+</style>
 </head>
 
 <body>
 
-<!-- START SCREEN -->
-<div id="startScreen">
+<div id="start">
   <p>Tap to open the album</p>
 </div>
 
-<!-- ALBUM -->
-<div id="album" class="hidden">
-
-  <!-- music hint -->
-  <div id="musicHint">Tap once to play music</div>
-
+<div id="album">
   <div class="polaroid">
-    <img id="photo" src="">
+    <img id="photo">
     <p id="caption"></p>
   </div>
 
   <div class="controls">
     <button onclick="prev()">←</button>
-    <span id="count"></span>
     <button onclick="next()">→</button>
   </div>
 </div>
 
-<audio id="bgm">
+<audio id="music">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-/* ===== INLINE JS (STABLE) ===== */
+/* ===== GUARANTEED JS ===== */
 
 const memories = [
-  ["1.jpg","This wasn’t just a day. It became a memory."],
-  ["2.jpg","This is how I remember us — without noise, just holding on."],
-  ["3.jpg","I felt safe here. I still do when I think about it."],
-  ["4.jpg","You always made even ordinary moments feel lighter."],
-  ["5.jpg","This smile was real. Nothing was forced."],
-  ["6.jpg","You always wanted this moment saved on your digicam."],
-  ["7.jpg","You were my home."],
-  ["8.jpg","In those moments, the world felt smaller, just us."],
-  ["9.jpg","You took care of me in ways I never asked for."],
-  ["10.jpg","Some memories don’t fade — they just stay quiet."],
-  ["11.jpg","Us in the small world."]
+ ["1.jpg","This wasn’t just a day. It became a memory."],
+ ["2.jpg","This is how I remember us — without noise, just holding on."],
+ ["3.jpg","I felt safe here. I still do when I think about it."],
+ ["4.jpg","You always made even ordinary moments feel lighter."],
+ ["5.jpg","This smile was real. Nothing was forced."],
+ ["6.jpg","You always wanted this moment saved on your digicam."],
+ ["7.jpg","You were my home."],
+ ["8.jpg","In those moments, the world felt smaller, just us."],
+ ["9.jpg","You took care of me in ways I never asked for."],
+ ["10.jpg","Some memories don’t fade — they just stay quiet."],
+ ["11.jpg","Us in the small world."]
 ];
 
 let i = 0;
 let opened = false;
 
-const start = document.getElementById("startScreen");
+const start = document.getElementById("start");
 const album = document.getElementById("album");
 const photo = document.getElementById("photo");
 const caption = document.getElementById("caption");
-const count = document.getElementById("count");
-const bgm = document.getElementById("bgm");
+const music = document.getElementById("music");
 
 function show(){
   photo.src = memories[i][0];
   caption.innerText = memories[i][1];
-  count.innerText = (i + 1) + " / " + memories.length;
 }
 
 function next(){
-  if(i < memories.length - 1){
+  if(i < memories.length-1){
     i++;
     show();
   }
@@ -83,30 +156,24 @@ function prev(){
   }
 }
 
-function startAlbum(){
+function openAlbum(){
   if(opened) return;
   opened = true;
 
-  start.style.display = "none";
-  album.classList.remove("hidden");
+  start.style.display="none";
+  album.style.display="block";
   show();
 
-  // mobile-safe music trigger
-  const hint = document.getElementById("musicHint");
-
-  function playMusic(){
-    bgm.loop = true;
-    bgm.volume = 0.7;
-    bgm.play().catch(()=>{});
-    if(hint) hint.remove();
-  }
-
-  document.body.addEventListener("click", playMusic, { once:true });
-  document.body.addEventListener("touchstart", playMusic, { once:true });
+  // SECOND TAP ANYWHERE PLAYS MUSIC (100% SAFE)
+  document.body.addEventListener("click", ()=>{
+    music.loop = true;
+    music.volume = 0.7;
+    music.play().catch(()=>{});
+  }, { once:true });
 }
 
-start.onclick = startAlbum;
-start.ontouchstart = startAlbum;
+start.addEventListener("click", openAlbum);
+start.addEventListener("touchstart", openAlbum);
 </script>
 
 </body>
