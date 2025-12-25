@@ -1,6 +1,10 @@
-const memoryBox = document.getElementById("memoryBox");
-const finalStill = document.getElementById("finalStill");
 const bgm = document.getElementById("bgm");
+const startScreen = document.getElementById("startScreen");
+const album = document.getElementById("album");
+
+const photo = document.getElementById("photo");
+const caption = document.getElementById("caption");
+const count = document.getElementById("count");
 
 const memories = [
   { img:"1.jpg", text:"This wasn’t just a day. It became a memory." },
@@ -12,47 +16,43 @@ const memories = [
   { img:"7.jpg", text:"You were my home." },
   { img:"8.jpg", text:"In those moments, the world felt smaller, just us." },
   { img:"9.jpg", text:"You took care of me in ways I never asked for." },
-  { img:"10.jpg", text:"Some memories don’t fade — they just stay quiet." }
+  { img:"10.jpg", text:"Some memories don’t fade — they just stay quiet." },
+  { img:"11.jpg", text:"Us in the small world." }
 ];
 
 let index = 0;
 
-function dropPhoto(){
-  if(index >= memories.length){
-    clearInterval(interval);
-    setTimeout(showFinal, 4000);
-    return;
+function show(){
+  photo.src = memories[index].img;
+  caption.innerText = memories[index].text;
+  count.innerText = `${index+1} / ${memories.length}`;
+}
+
+function next(){
+  if(index < memories.length - 1){
+    index++;
+    show();
   }
-
-  const mem = memories[index];
-
-  const p = document.createElement("div");
-  p.className = "polaroid";
-
-  const img = document.createElement("img");
-  img.src = mem.img;
-
-  const span = document.createElement("span");
-  span.innerText = mem.text;
-
-  const rotate = Math.random()*30 - 15;
-  const left = Math.random()*70 + 10;
-
-  p.style.left = left + "vw";
-  p.style.animationDuration = (10 + Math.random()*4) + "s";
-  p.style.setProperty("--rotate", rotate + "deg");
-
-  p.appendChild(img);
-  p.appendChild(span);
-  memoryBox.appendChild(p);
-
-  setTimeout(()=>p.remove(), 17000);
-  index++;
 }
 
-function showFinal(){
-  bgm.volume = 0.4;
-  finalStill.classList.remove("hidden");
+function prev(){
+  if(index > 0){
+    index--;
+    show();
+  }
 }
 
-const interval = setInterval(dropPhoto, 2600);
+/* 🔥 USER INTERACTION = MUSIC WILL PLAY */
+startScreen.addEventListener("click", () => {
+  startScreen.classList.add("hidden");
+  album.classList.remove("hidden");
+
+  bgm.volume = 0.7;
+  bgm.loop = true;
+
+  bgm.play().catch(err => {
+    console.log("Audio blocked:", err);
+  });
+
+  show();
+});
