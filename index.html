@@ -9,14 +9,13 @@
 
 <body>
 
-<!-- 🔥 INLINE TAP HANDLER -->
-<div id="startScreen" onclick="startAlbum()" ontouchstart="startAlbum()">
+<div id="startScreen">
   <p>Tap to open the album</p>
 </div>
 
 <div id="album" class="hidden">
   <div class="polaroid">
-    <img id="photo" src="">
+    <img id="photo">
     <p id="caption"></p>
   </div>
 
@@ -27,10 +26,68 @@
   </div>
 </div>
 
-<audio id="bgm" preload="auto">
+<audio id="bgm">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
-<script src="script.js"></script>
+<script>
+/* 🔥 INLINE JS — CANNOT FAIL */
+
+const memories = [
+  ["1.jpg","This wasn’t just a day. It became a memory."],
+  ["2.jpg","This is how I remember us — without noise, just holding on."],
+  ["3.jpg","I felt safe here. I still do when I think about it."],
+  ["4.jpg","You always made even ordinary moments feel lighter."],
+  ["5.jpg","This smile was real. Nothing was forced."],
+  ["6.jpg","You always wanted this moment saved on your digicam."],
+  ["7.jpg","You were my home."],
+  ["8.jpg","In those moments, the world felt smaller, just us."],
+  ["9.jpg","You took care of me in ways I never asked for."],
+  ["10.jpg","Some memories don’t fade — they just stay quiet."],
+  ["11.jpg","Us in the small world."]
+];
+
+let i = 0;
+let opened = false;
+
+const start = document.getElementById("startScreen");
+const album = document.getElementById("album");
+const photo = document.getElementById("photo");
+const caption = document.getElementById("caption");
+const count = document.getElementById("count");
+const bgm = document.getElementById("bgm");
+
+function show(){
+  photo.src = memories[i][0];
+  caption.innerText = memories[i][1];
+  count.innerText = (i+1) + " / " + memories.length;
+}
+
+function next(){
+  if(i < memories.length-1){ i++; show(); }
+}
+
+function prev(){
+  if(i > 0){ i--; show(); }
+}
+
+start.onclick = startAlbum;
+start.ontouchstart = startAlbum;
+
+function startAlbum(){
+  if(opened) return;
+  opened = true;
+
+  start.style.display = "none";
+  album.classList.remove("hidden");
+
+  bgm.loop = true;
+  bgm.volume = 0.7;
+  bgm.play().catch(()=>{});
+
+  show();
+}
+</script>
+
 </body>
 </html>
