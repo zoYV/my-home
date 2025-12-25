@@ -1,6 +1,6 @@
 const bgm = document.getElementById("bgm");
-const startScreen = document.getElementById("startScreen");
 const album = document.getElementById("album");
+const startScreen = document.getElementById("startScreen");
 
 const photo = document.getElementById("photo");
 const caption = document.getElementById("caption");
@@ -22,38 +22,17 @@ const memories = [
 ];
 
 let index = 0;
-let started = false;
+let opened = false;
 
 function render(){
   photo.src = memories[index].img;
   caption.innerText = memories[index].text;
-  count.innerText = `${index + 1} / ${memories.length}`;
-}
-
-function flip(nextIndex){
-  polaroid.classList.add("flip");
-  setTimeout(() => {
-    index = nextIndex;
-    render();
-    polaroid.classList.remove("flip");
-  }, 400);
-}
-
-function next(){
-  if(index < memories.length - 1){
-    flip(index + 1);
-  }
-}
-
-function prev(){
-  if(index > 0){
-    flip(index - 1);
-  }
+  count.innerText = `${index+1} / ${memories.length}`;
 }
 
 function startAlbum(){
-  if(started) return;
-  started = true;
+  if(opened) return;
+  opened = true;
 
   startScreen.style.display = "none";
   album.classList.remove("hidden");
@@ -65,6 +44,16 @@ function startAlbum(){
   render();
 }
 
-/* 🔥 HANDLE BOTH TOUCH + CLICK */
-startScreen.addEventListener("touchstart", startAlbum, { passive:true });
-startScreen.addEventListener("click", startAlbum);
+function next(){
+  if(index < memories.length - 1){
+    index++;
+    render();
+  }
+}
+
+function prev(){
+  if(index > 0){
+    index--;
+    render();
+  }
+    }
