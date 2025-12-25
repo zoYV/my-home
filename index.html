@@ -9,12 +9,11 @@
 
 <body>
 
-<!-- TAP SCREEN -->
-<div id="startScreen">
+<!-- 🔥 INLINE TAP HANDLER -->
+<div id="startScreen" onclick="startAlbum()" ontouchstart="startAlbum()">
   <p>Tap to open the album</p>
 </div>
 
-<!-- ALBUM -->
 <div id="album" class="hidden">
   <div class="polaroid">
     <img id="photo" src="">
@@ -28,7 +27,6 @@
   </div>
 </div>
 
-<!-- 🔥 REMOVE autoplay -->
 <audio id="bgm" preload="auto">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
