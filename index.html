@@ -9,13 +9,19 @@
 
 <body>
 
+<!-- START SCREEN -->
 <div id="startScreen">
   <p>Tap to open the album</p>
 </div>
 
+<!-- ALBUM -->
 <div id="album" class="hidden">
+
+  <!-- music hint -->
+  <div id="musicHint">Tap once to play music</div>
+
   <div class="polaroid">
-    <img id="photo">
+    <img id="photo" src="">
     <p id="caption"></p>
   </div>
 
@@ -31,7 +37,7 @@
 </audio>
 
 <script>
-/* 🔥 INLINE JS — CANNOT FAIL */
+/* ===== INLINE JS (STABLE) ===== */
 
 const memories = [
   ["1.jpg","This wasn’t just a day. It became a memory."],
@@ -60,19 +66,22 @@ const bgm = document.getElementById("bgm");
 function show(){
   photo.src = memories[i][0];
   caption.innerText = memories[i][1];
-  count.innerText = (i+1) + " / " + memories.length;
+  count.innerText = (i + 1) + " / " + memories.length;
 }
 
 function next(){
-  if(i < memories.length-1){ i++; show(); }
+  if(i < memories.length - 1){
+    i++;
+    show();
+  }
 }
 
 function prev(){
-  if(i > 0){ i--; show(); }
+  if(i > 0){
+    i--;
+    show();
+  }
 }
-
-start.onclick = startAlbum;
-start.ontouchstart = startAlbum;
 
 function startAlbum(){
   if(opened) return;
@@ -80,13 +89,24 @@ function startAlbum(){
 
   start.style.display = "none";
   album.classList.remove("hidden");
-
-  bgm.loop = true;
-  bgm.volume = 0.7;
-  bgm.play().catch(()=>{});
-
   show();
+
+  // mobile-safe music trigger
+  const hint = document.getElementById("musicHint");
+
+  function playMusic(){
+    bgm.loop = true;
+    bgm.volume = 0.7;
+    bgm.play().catch(()=>{});
+    if(hint) hint.remove();
+  }
+
+  document.body.addEventListener("click", playMusic, { once:true });
+  document.body.addEventListener("touchstart", playMusic, { once:true });
 }
+
+start.onclick = startAlbum;
+start.ontouchstart = startAlbum;
 </script>
 
 </body>
