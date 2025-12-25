@@ -5,7 +5,6 @@ const album = document.getElementById("album");
 const photo = document.getElementById("photo");
 const caption = document.getElementById("caption");
 const count = document.getElementById("count");
-
 const polaroid = document.querySelector(".polaroid");
 
 const memories = [
@@ -23,21 +22,21 @@ const memories = [
 ];
 
 let index = 0;
+let started = false;
 
 function render(){
   photo.src = memories[index].img;
   caption.innerText = memories[index].text;
-  count.innerText = `${index+1} / ${memories.length}`;
+  count.innerText = `${index + 1} / ${memories.length}`;
 }
 
 function flip(nextIndex){
   polaroid.classList.add("flip");
-
-  setTimeout(()=>{
+  setTimeout(() => {
     index = nextIndex;
     render();
     polaroid.classList.remove("flip");
-  }, 450);
+  }, 400);
 }
 
 function next(){
@@ -52,14 +51,20 @@ function prev(){
   }
 }
 
-/* MUSIC + START */
-startScreen.addEventListener("click", ()=>{
-  startScreen.classList.add("hidden");
+function startAlbum(){
+  if(started) return;
+  started = true;
+
+  startScreen.style.display = "none";
   album.classList.remove("hidden");
 
-  bgm.volume = 0.7;
   bgm.loop = true;
-  bgm.play();
+  bgm.volume = 0.7;
+  bgm.play().catch(()=>{});
 
   render();
-});
+}
+
+/* 🔥 HANDLE BOTH TOUCH + CLICK */
+startScreen.addEventListener("touchstart", startAlbum, { passive:true });
+startScreen.addEventListener("click", startAlbum);
