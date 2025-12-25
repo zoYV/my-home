@@ -2,28 +2,34 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Memory Box</title>
+<title>Us</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="title">
-  <h1>Some memories never leave</h1>
-  <p>they just fall back softly…</p>
+<!-- TAP SCREEN -->
+<div id="startScreen">
+  <p>Tap to open the album</p>
 </div>
 
-<div id="memoryBox"></div>
+<!-- ALBUM -->
+<div id="album" class="hidden">
+  <div class="polaroid">
+    <img id="photo" src="">
+    <p id="caption"></p>
+  </div>
 
-<div id="finalStill" class="hidden">
-  <div class="polaroid final">
-    <img src="11.jpg">
-    <span>Us in the small world.</span>
+  <div class="controls">
+    <button onclick="prev()">←</button>
+    <span id="count"></span>
+    <button onclick="next()">→</button>
   </div>
 </div>
 
-<audio id="bgm" autoplay loop>
+<!-- 🔥 REMOVE autoplay -->
+<audio id="bgm" preload="auto">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
