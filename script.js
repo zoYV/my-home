@@ -6,6 +6,8 @@ const photo = document.getElementById("photo");
 const caption = document.getElementById("caption");
 const count = document.getElementById("count");
 
+const polaroid = document.querySelector(".polaroid");
+
 const memories = [
   { img:"1.jpg", text:"This wasn’t just a day. It became a memory." },
   { img:"2.jpg", text:"This is how I remember us — without noise, just holding on." },
@@ -22,37 +24,42 @@ const memories = [
 
 let index = 0;
 
-function show(){
+function render(){
   photo.src = memories[index].img;
   caption.innerText = memories[index].text;
   count.innerText = `${index+1} / ${memories.length}`;
 }
 
+function flip(nextIndex){
+  polaroid.classList.add("flip");
+
+  setTimeout(()=>{
+    index = nextIndex;
+    render();
+    polaroid.classList.remove("flip");
+  }, 450);
+}
+
 function next(){
   if(index < memories.length - 1){
-    index++;
-    show();
+    flip(index + 1);
   }
 }
 
 function prev(){
   if(index > 0){
-    index--;
-    show();
+    flip(index - 1);
   }
 }
 
-/* 🔥 USER INTERACTION = MUSIC WILL PLAY */
-startScreen.addEventListener("click", () => {
+/* MUSIC + START */
+startScreen.addEventListener("click", ()=>{
   startScreen.classList.add("hidden");
   album.classList.remove("hidden");
 
   bgm.volume = 0.7;
   bgm.loop = true;
+  bgm.play();
 
-  bgm.play().catch(err => {
-    console.log("Audio blocked:", err);
-  });
-
-  show();
+  render();
 });
